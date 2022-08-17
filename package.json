@@ -1,0 +1,52 @@
+{
+    "name": "asyl",
+    "version": "1.0.0",
+    "description": "Asyl - WebAssembly Async System Layer",
+    "type": "module",
+    "source": "./src/main.ts",
+    "main": "./dist/asyl.m.js",
+    "module": "./dist/asyl.m.js",
+    "global": "./dist/asyl.js",
+    "types": "./dist/asyl.d.ts",
+    "scripts": {
+        "test": "echo Ok",
+        "deploy": "pnpm build && pnpm tsdoc && node ./scripts/deploy.js",
+        "commit": "node ./scripts/commit.js",
+        "tsdoc": "dts-bundle-generator --umd-module-name asyl --export-referenced-types -o ./dist/asyl.d.ts ./src/main.ts",
+        "changes": "rose ./scripts/changes.fn",
+        "build:global": "parcel build --no-cache --target global",
+        "build:module": "parcel build --no-cache --target module",
+        "watch": "parcel watch --no-cache --target module --no-hmr",
+        "build": "pnpm build:module && pnpm build:global"
+    },
+    "targets": {
+        "module": {
+            "source": "./src/main.ts",
+            "optimize": true
+        },
+        "global": {
+            "source": "./src/_main.ts",
+            "optimize": true,
+            "includeNodeModules": true
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/rsthn/asyl.git"
+    },
+    "author": "RedStar Technologies",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/rsthn/asyl/issues"
+    },
+    "homepage": "https://github.com/rsthn/asyl#readme",
+    "devDependencies": {
+        "dts-bundle-generator": "^6.12.0",
+        "parcel": "^2.6.2"
+    },
+    "files": [
+        "dist/",
+        "LICENSE",
+        "README.md"
+    ]
+}
