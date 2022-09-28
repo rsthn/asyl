@@ -1,6 +1,6 @@
 {
     "name": "asyl",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Asyl - WebAssembly Async System Layer",
     "type": "module",
     "source": "./src/main.ts",
@@ -41,12 +41,15 @@
     },
     "homepage": "https://github.com/rsthn/asyl#readme",
     "devDependencies": {
-        "dts-bundle-generator": "^6.12.0",
-        "parcel": "^2.6.2"
+        "dts-bundle-generator": "^6.12.0"
     },
     "files": [
         "dist/",
         "LICENSE",
         "README.md"
-    ]
+    ],
+    "dependencies": {
+        "atob": "^2.1.2",
+        "buffer": "^6.0.3"
+    }
 }

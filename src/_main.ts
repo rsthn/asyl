@@ -1,7 +1,9 @@
 
-import { default as load } from './loader';
+import { loadFromArrayBuffer, loadFromDataUri, loadFromUrl } from './loader';
 
 globalThis.asyl =
 {
-	load: load
+	loadFromArrayBuffer,
+	loadFromDataUri,
+	loadFromUrl
 };

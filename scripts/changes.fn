@@ -7,6 +7,14 @@
 
 (set version ((utils::json::parse (file::read (tmp))).version))
 
+;; Check if this is the first run to create the CHANGELOG.md file.
+(set first false)
+
+(when (eq (args.1) "first")
+	(array::remove (args) 1)
+	(set first true)
+)
+
 ;; Get SVN changelog up to last publish.
 (utils::exec "svn up >nul")
 (utils::exec "svn log -l 20 >changes.txt")
@@ -40,7 +48,7 @@
 
 (for (blocks) (for (i) (array::push (changes) (i))))
 
-(when (not (found))
+(when (and (not (first)) (not (found)))
 	(throw "Previous version mark not found. Try increasing number of log messages to fetch."))
 
 (when (zero? (changes.length))

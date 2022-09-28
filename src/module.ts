@@ -54,4 +54,8 @@ export default class Module
 
 		return s.join('');
 	}
+
+	mapFloat32Array (offset: number, count: number) : Float32Array {
+		return new Float32Array(this.memory.buffer, offset, count);
+	}
 };

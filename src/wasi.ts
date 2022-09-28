@@ -7,6 +7,7 @@ const wasi =
 	environ_sizes_get: () => { return 0; },
 	clock_res_get: () => { return 0; },
 	clock_time_get: () => { return 0; },
+
 	fd_advise: () => { return 0; },
 	fd_allocate: () => { return 0; },
 	fd_close: () => { return 0; },
@@ -28,6 +29,7 @@ const wasi =
 	fd_sync: () => { return 0; },
 	fd_tell: () => { return 0; },
 	fd_write: () => { return 0; },
+
 	path_create_directory: () => { return 0; },
 	path_filestat_get: () => { return 0; },
 	path_filestat_set_times: () => { return 0; },
@@ -38,10 +40,12 @@ const wasi =
 	path_rename: () => { return 0; },
 	path_symlink: () => { return 0; },
 	path_unlink_file: () => { return 0; },
+
 	poll_oneoff: () => { return 0; },
 	proc_exit: () => { return 0; },
 	sched_yield: () => { return 0; },
 	random_get: () => { return 0; },
+
 	sock_accept: () => { return 0; },
 	sock_recv: () => { return 0; },
 	sock_send: () => { return 0; },

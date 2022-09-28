@@ -2,18 +2,7 @@ import { exec } from 'child_process';
 import fs from 'fs';
 
 let info = JSON.parse(fs.readFileSync('package.json'));
-
-let version = info.version.split('.');
-version[version.length-1]++;
-
-if (version[version.length-1] == '100')
-{
-	version[version.length-1] = 0;
-	version[version.length-2]++;
-}
-
-info.version = version.join('.');
-
+info.version = fs.readFileSync('CHANGELOG.md').toString().split('\n')[0].split('-')[0].split('v')[1].trim();
 fs.writeFileSync('package.json', JSON.stringify(info, null, '    '));
 
 function run (command)
@@ -36,7 +25,6 @@ function run (command)
 		});
 	});
 };
-
 
 run('svn-add')
 run('svn-del')
