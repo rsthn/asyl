@@ -1,6 +1,6 @@
 {
     "name": "asyl",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Asyl - WebAssembly Async System Layer",
     "type": "module",
     "source": "./src/main.ts",
@@ -12,12 +12,14 @@
         "test": "echo Ok",
         "deploy": "pnpm build && pnpm tsdoc && node ./scripts/deploy.js",
         "commit": "node ./scripts/commit.js",
-        "tsdoc": "dts-bundle-generator --umd-module-name asyl --export-referenced-types -o ./dist/asyl.d.ts ./src/main.ts",
+        "tsdoc": "dts-bundle-generator --no-banner --disable-symlinks-following -o ./dist/asyl.d.ts ./src/main.ts",
         "changes": "rose ./scripts/changes.fn",
         "build:global": "parcel build --no-cache --target global",
         "build:module": "parcel build --no-cache --target module",
         "watch": "parcel watch --no-cache --target module --no-hmr",
-        "build": "pnpm build:module && pnpm build:global"
+        "build-core": "wasm++ src/main.cpp -o src/main.wasm",
+        "build": "pnpm build:module && pnpm build:global",
+        "all": "pnpm build-core && pnpm build && pnpm tsdoc"
     },
     "targets": {
         "module": {
@@ -40,9 +42,6 @@
         "url": "https://github.com/rsthn/asyl/issues"
     },
     "homepage": "https://github.com/rsthn/asyl#readme",
-    "devDependencies": {
-        "dts-bundle-generator": "^6.12.0"
-    },
     "files": [
         "dist/",
         "LICENSE",
@@ -51,5 +50,12 @@
     "dependencies": {
         "atob": "^2.1.2",
         "buffer": "^6.0.3"
+    },
+    "devDependencies": {
+        "@parcel/optimizer-data-url": "2.9.2",
+        "@parcel/transformer-inline-string": "2.9.2",
+        "dts-bundle-generator": "^8.0.1",
+        "parcel": "^2.9.2",
+        "typescript": "^5.0.4"
     }
 }

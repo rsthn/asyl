@@ -16,8 +16,10 @@
 )
 
 ;; Get SVN changelog up to last publish.
-(utils::exec "svn up >nul")
-(utils::exec "svn log -l 20 >changes.txt")
+(when (not (path::exists "changes.txt"))
+	(utils::exec "svn up >nul")
+	(utils::exec "svn log -l 20 >changes.txt")
+)
 
 (set data (file::read "changes.txt"))
 (set found false)

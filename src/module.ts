@@ -1,4 +1,6 @@
 
+import { asyl, memory } from "./loader";
+
 export default class Module
 {
 	[key: string]: any;
@@ -10,8 +12,14 @@ export default class Module
 	constructor (instance: WebAssembly.Instance)
 	{
 		this.instance = instance;
-		this.memory = instance.exports.memory as WebAssembly.Memory;
-		this.dv = new DataView (this.memory.buffer);
+
+		if (instance.exports.memory) {
+			this.memory = instance.exports.memory as WebAssembly.Memory;
+			this.dv = new DataView (this.memory.buffer);
+		} else {
+			this.memory = null;
+			this.dv = null;
+		}
 
 		let name: string;
 		let value: any;
@@ -26,9 +34,28 @@ export default class Module
 		}
 	}
 
+	/**
+	 * Allocates a block of memory in the WebAssembly module memory space.
+	 * @param bytes Number of bytes to allocate.
+	 */
 	alloc (bytes: number) : number
 	{
-		throw new Error ('Method `alloc` not implemented in WebAssembly module.');
+		if (asyl === null)
+			throw new Error("Main asyl module not loaded yet.");
+
+		return asyl.memoryAlloc(bytes);
+	}
+
+	/**
+	 * Frees a block of memory in the WebAssembly module memory space.
+	 * @param ptr Pointer to the start of the block to free.
+	 */
+	free (ptr: number) : void
+	{
+		if (asyl === null)
+			throw new Error("Main asyl module not loaded yet.");
+
+		asyl.memoryFree(ptr);
 	}
 
 	stringNew (str) : number
@@ -55,7 +82,23 @@ export default class Module
 		return s.join('');
 	}
 
+	/**
+	 * Creates a new Float32Array view from a location in the WebAssembly module memory.
+	 * @param offset Byte offset into the module memory to start the view.
+	 * @param count Number of bytes to include in the view.
+	 * @returns Float32Array
+	 */
 	mapFloat32Array (offset: number, count: number) : Float32Array {
-		return new Float32Array(this.memory.buffer, offset, count);
+		return new Float32Array(this.memory ? this.memory.buffer : memory.buffer, offset, count);
+	}
+
+	/**
+	 * Creates a new Uint8Array view from a location in the WebAssembly module memory.
+	 * @param offset Byte offset into the module memory to start the view.
+	 * @param count Number of bytes to include in the view.
+	 * @returns Uint8Array
+	 */
+	mapUint8Array (offset: number, count: number) : Uint8Array {
+		return new Uint8Array(this.memory ? this.memory.buffer : memory.buffer, offset, count);
 	}
 };

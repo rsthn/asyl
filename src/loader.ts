@@ -3,14 +3,61 @@ import Module from './module';
 import wasi from './wasi';
 import atob from 'atob';
 
+//@ts-ignore
+import main_wasm from 'data-url:./main.wasm';
+
 /**
- * Decodes a base-64 data URI and returns an array buffer.
- * @param {string} data
- * @returns {ArrayBuffer}
+ * Configuration object for the module loader.
  */
-function decodeDataUri (data: string) {
-	const [, content] = decodeURIComponent(data).split(',', 2);
-	return new Uint8Array(Array.from(atob(content)).map( (v: string) => v.charCodeAt(0))).buffer;
+export const config =
+{
+	/**
+	 * Initial size of the WebAssembly shared memory.
+	 */
+	memory: {
+		initial: 16, // 16 pages = 1 MB
+		maximum: 32768, // 32768 pages = 2 GB
+		shared: true
+	}
+};
+
+/**
+ * Shared memory object.
+ */
+export let memory: WebAssembly.Memory = null;
+
+/**
+ * Shared memory data view.
+ */
+export let dataView: DataView = null;
+
+/**
+ * Main asyl module. Exposes several utility functions.
+ */
+export let asyl: Module = null;
+
+/**
+ * Loads the main module and prepares global shared memory.
+ */
+export async function loadAsyl ()
+{
+	if (asyl !== null)
+		return;
+
+	memory = new WebAssembly.Memory ({
+		initial: config.memory.initial,
+		maximum: config.memory.maximum,
+		shared: true
+	});
+
+	dataView = new DataView (memory.buffer);
+
+	const { instance } = await WebAssembly.instantiate (decodeDataUri(main_wasm), {
+		env: { memory: memory },
+		wasi_snapshot_preview1: wasi
+	});
+
+	asyl = new Module(instance);
 }
 
 /**
@@ -21,12 +68,24 @@ function decodeDataUri (data: string) {
  */
 export async function loadFromArrayBuffer (bytes: ArrayBuffer, env?: WebAssembly.ModuleImports) : Promise<Module>
 {
+	if (asyl === null) await loadAsyl();
+
 	const { instance } = await WebAssembly.instantiate (bytes, {
-		env: env ?? { },
+		env: { memory: memory, ...env },
 		wasi_snapshot_preview1: wasi
 	});
 
 	return new Module(instance);
+}
+
+/**
+ * Decodes a base-64 data URI and returns an array buffer.
+ * @param {string} data
+ * @returns {ArrayBuffer}
+ */
+function decodeDataUri (data: string) {
+	const [, content] = decodeURIComponent(data).split(',', 2);
+	return new Uint8Array(Array.from(atob(content)).map( (v: string) => v.charCodeAt(0) )).buffer;
 }
 
 /**
