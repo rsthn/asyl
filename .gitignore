@@ -4,3 +4,4 @@ node_modules/
 .svn
 test/
 *.wasm
+*.wat

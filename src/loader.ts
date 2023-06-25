@@ -58,6 +58,19 @@ export async function loadAsyl ()
 	});
 
 	asyl = new Module(instance);
+	asyl.core = { };
+
+	// Copy the core exports, which are prefixed with an underscore.
+	let name: string;
+	let value: any;
+
+	for ([name, value] of Object.entries(asyl.instance.exports))
+	{
+		if (name[0] !== '_')
+			continue;
+
+		asyl.core[name.substr(1)] = value;
+	}
 }
 
 /**
@@ -71,7 +84,7 @@ export async function loadFromArrayBuffer (bytes: ArrayBuffer, env?: WebAssembly
 	if (asyl === null) await loadAsyl();
 
 	const { instance } = await WebAssembly.instantiate (bytes, {
-		env: { memory: memory, ...env },
+		env: { memory: memory, ...env, ...asyl.core },
 		wasi_snapshot_preview1: wasi
 	});
 

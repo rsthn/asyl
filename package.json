@@ -17,7 +17,8 @@
         "build:global": "parcel build --no-cache --target global",
         "build:module": "parcel build --no-cache --target module",
         "watch": "parcel watch --no-cache --target module --no-hmr",
-        "build-core": "wasm++ src/main.cpp -o src/main.wasm",
+        "build-core": "wasm++ -flto -Wl,--lto-O3 src/main.cpp -o src/main.wasm",
+		"wat": "wasm2wat --enable-thread src/main.wasm > src/main.wat",
         "build": "pnpm build:module && pnpm build:global",
         "all": "pnpm build-core && pnpm build && pnpm tsdoc"
     },

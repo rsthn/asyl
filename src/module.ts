@@ -43,7 +43,7 @@ export default class Module
 		if (asyl === null)
 			throw new Error("Main asyl module not loaded yet.");
 
-		return asyl.memoryAlloc(bytes);
+		return asyl.core.malloc(bytes);
 	}
 
 	/**
@@ -55,7 +55,7 @@ export default class Module
 		if (asyl === null)
 			throw new Error("Main asyl module not loaded yet.");
 
-		asyl.memoryFree(ptr);
+		asyl.core.free(ptr);
 	}
 
 	stringNew (str) : number
