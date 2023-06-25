@@ -1,6 +1,6 @@
 {
     "name": "asyl",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Asyl - WebAssembly Async System Layer",
     "type": "module",
     "source": "./src/main.ts",
@@ -18,7 +18,7 @@
         "build:module": "parcel build --no-cache --target module",
         "watch": "parcel watch --no-cache --target module --no-hmr",
         "build-core": "wasm++ -flto -Wl,--lto-O3 src/main.cpp -o src/main.wasm",
-		"wat": "wasm2wat --enable-thread src/main.wasm > src/main.wat",
+        "wat": "wasm2wat --enable-thread src/main.wasm > src/main.wat",
         "build": "pnpm build:module && pnpm build:global",
         "all": "pnpm build-core && pnpm build && pnpm tsdoc"
     },
