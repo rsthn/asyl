@@ -1,3 +1,19 @@
+# v1.0.3 - Jun 25 2023
+
+#### Asyl
+- Updated main asyl wasm module to export several function from cstdlib and cmath.
+- Compile your modules with the `-nostdlib` option to ensure it uses the ones exposed by asyl.
+
+#### Loader
+- When importing a module now the core exports of asyl are made available to it.
+- Core imports of Asyl are those starting with underscore in the asyl.cpp file.
+- Asyl core exports are available via the `core` attribute.
+
+#### Module
+- Renamed functions allocMemory and freeMemory to just malloc and free.
+
+<br/>
+
 # v1.0.2 - Jun 20 2023
 
 #### Loader
