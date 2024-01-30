@@ -62,12 +62,12 @@ export declare let asyl: Module;
  */
 export declare function loadAsyl(): Promise<void>;
 /**
- * Loads a WebAssembly module from an array buffer and returns an Asyl module.
- * @param {ArrayBuffer} bytes Array buffer containing a WebAssembly binary.
+ * Loads a WebAssembly module from a Uint8Array and returns an Asyl module.
+ * @param {Uint8Array} bytes Array buffer containing a WebAssembly binary.
  * @param {Module} env Module imports to pass to the WebAssembly instantiate method.
  * @returns {Promise<Module>}
  */
-export declare function loadFromArrayBuffer(bytes: ArrayBuffer, env?: WebAssembly.ModuleImports): Promise<Module>;
+export declare function loadFromBytes(bytes: Uint8Array, env?: WebAssembly.ModuleImports): Promise<Module>;
 /**
  * Loads a WebAssembly module from a Data URI and returns an Asyl module.
  * @param uri - Data URI representing the WASM module data.

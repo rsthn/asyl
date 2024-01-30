@@ -1,6 +1,6 @@
 
 import {
-	config, loadAsyl, loadFromArrayBuffer, loadFromDataUri, loadFromUrl,
+	config, loadAsyl, loadFromBytes, loadFromDataUri, loadFromUrl,
 	memory, dataView, asyl
 } from './loader';
 
@@ -8,7 +8,7 @@ globalThis.asyl =
 {
 	config,
 	loadAsyl,
-	loadFromArrayBuffer,
+	loadFromBytes,
 	loadFromDataUri,
 	loadFromUrl,
 

@@ -132,3 +132,6 @@ export float _fmaxf(float x, float y) { return std::fmaxf(x, y); }
 export float _fminf(float x, float y) { return std::fminf(x, y); }
 export float _fabsf(float x) { return std::fabsf(x); }
 export float _fmaf(float x, float y, float z) { return std::fmaf(x, y, z); }
+
+export void _start() {
+}

@@ -1,6 +1,6 @@
 
 export {
-	config, loadFromArrayBuffer, loadFromDataUri, loadFromUrl, loadAsyl,
+	config, loadFromBytes, loadFromDataUri, loadFromUrl, loadAsyl,
 	memory, dataView, asyl
 } from './loader';
 

@@ -17,10 +17,10 @@
         "build:global": "parcel build --no-cache --target global",
         "build:module": "parcel build --no-cache --target module",
         "watch": "parcel watch --no-cache --target module --no-hmr",
-        "build-core": "wasm++ -flto -Wl,--lto-O3 src/main.cpp -o src/main.wasm",
-        "wat": "wasm2wat --enable-thread src/main.wasm > src/main.wat",
+        "wasm": "wasm++ -Wl,-Map,src/main.map -Wl,--export-all -Wl,--shared-memory -Wl,--import-memory -Wl,--initial-memory=1048576 -Wl,--max-memory=2147483648 -flto -Wl,--lto-O3 src/main.cpp -o src/main.wasm",
+        "wat": "wasm2wat --enable-threads --generate-names src/main.wasm > src/main.wat",
         "build": "pnpm build:module && pnpm build:global",
-        "all": "pnpm build-core && pnpm build && pnpm tsdoc"
+        "all": "pnpm wasm && pnpm build && pnpm tsdoc"
     },
     "targets": {
         "module": {
@@ -53,10 +53,10 @@
         "buffer": "^6.0.3"
     },
     "devDependencies": {
-        "@parcel/optimizer-data-url": "2.9.2",
-        "@parcel/transformer-inline-string": "2.9.2",
+        "@parcel/optimizer-data-url": "^2.9.3",
+        "@parcel/transformer-inline-string": "^2.9.3",
         "dts-bundle-generator": "^8.0.1",
-        "parcel": "^2.9.2",
-        "typescript": "^5.0.4"
+        "parcel": "^2.9.3",
+        "typescript": "^5.1.6"
     }
 }
