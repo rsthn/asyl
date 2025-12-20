@@ -5,3 +5,5 @@ node_modules/
 test/
 *.wasm
 *.wat
+src/main.map
+

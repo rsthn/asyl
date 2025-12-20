@@ -54,7 +54,7 @@ export async function loadAsyl ()
 
 	dataView = new DataView (memory.buffer);
 
-	const { instance } = await WebAssembly.instantiate (wasmBuff.buffer, {
+	const { instance } = await WebAssembly.instantiate(wasmBuff.buffer, {
 		env: { memory },
 		wasi_snapshot_preview1: wasi
 	});
@@ -149,8 +149,7 @@ export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.Module
 		let value, mod, name, _;
 
 		// Skip other sections.
-		if (bytes[i++] != 0x02)
-		{
+		if (bytes[i++] != 0x02) {
 			[value, i] = ldu32(bytes, i);
 			i += value;
 			continue;
@@ -246,7 +245,7 @@ export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.Module
 		break;
 	}
 
-	const { instance } = await WebAssembly.instantiate (bytes, {
+	const { instance } = await WebAssembly.instantiate(bytes as BufferSource, {
 		env: { memory, ...env, ...asyl.core },
 		wasi_snapshot_preview1: wasi
 	});

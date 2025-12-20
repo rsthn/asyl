@@ -1,8 +1,9 @@
 
 import {
 	config, loadAsyl, loadFromBytes, loadFromDataUri, loadFromUrl,
-	memory, dataView, asyl
-} from './loader';
+	memory, dataView, asyl,
+}
+from './loader';
 
 globalThis.asyl =
 {
@@ -14,5 +15,5 @@ globalThis.asyl =
 
 	memory,
 	dataView,
-	asyl
+	asyl,
 };
