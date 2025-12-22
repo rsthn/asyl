@@ -17,7 +17,7 @@
         "build:global": "parcel build --no-cache --target global",
         "build:module": "parcel build --no-cache --target module",
         "watch": "parcel watch --no-cache --target module --no-hmr",
-        "wasm": "/dev/opt/wasi-sdk/bin/clang++ -I/dev/usr-include -nostartfiles -Wl,--no-entry -Wl,--allow-undefined -Wl,--export-dynamic -Wl,--no-check-features -Wl,-Map,src/main.map -Wl,--export-all -Wl,--shared-memory -Wl,--import-memory -Wl,--initial-memory=1048576 -Wl,--max-memory=2147483648 -flto -Wl,--lto-O3 src/main.cpp -o src/main.wasm",
+        "wasm": "/dev/opt/wasi-sdk/bin/clang++ -I/dev/usr-include -nostartfiles -flto -Wl,--lto-O3 -Wl,--shared-memory -Wl,--import-memory -Wl,--initial-memory=1048576 -Wl,--max-memory=2147483648 -Wl,--export-all -Wl,--allow-undefined -Wl,--export-dynamic -Wl,--no-check-features -Wl,--no-entry src/main.cpp -o src/main.wasm -Wl,-Map,src/main.map",
         "wat": "wasm2wat --enable-threads --generate-names src/main.wasm > src/main.wat",
         "build": "pnpm build:module && pnpm build:global",
         "all": "pnpm wasm && pnpm build && pnpm tsdoc"
