@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  dts-bundle-generator>typescript: ^5.9.3
+
 importers:
 
   .:
