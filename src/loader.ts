@@ -36,6 +36,10 @@ export let dataView: DataView = null;
  */
 export let asyl: Module = null;
 
+function _log (...args) {
+    console.log('[asyl] ', ...args);
+}
+
 /**
  * Loads the main module and prepares global shared memory.
  */
@@ -181,14 +185,14 @@ export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.Module
                     {
                         case 0x00: // min: n, max: ε
                             [_, i] = ldu32(bytes, i);
-                            console.log('memory min=', _);
+                            _log('memory min=', _);
                             break;
 
                         case 0x01: // min: n, max: m
                             [_, i] = ldu32(bytes, i);
-                            console.log('memory min=', _);
+                            _log('memory min=', _);
                             [_, i] = ldu32(bytes, i);
-                            console.log('memory max=', _);
+                            _log('memory max=', _);
                             break;
 
                         case 0x03: // min: n, max: m (shared)
@@ -197,26 +201,26 @@ export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.Module
                             [maxMem, i] = ldu32(bytes, i);
                             descBytes = i - descOffs;
 
-                            console.log(`SHARED LIMITS: MIN=${minMem}, MAX=${maxMem}`);
+                            _log(`shared memory limits: min=${minMem}, max=${maxMem}`);
                             if (minMem == config.memory.initial && maxMem == config.memory.maximum) {
-                                console.log('NO PATCHING REQUIRED');
+                                _log('shared memory limits match, no patching required');
                                 value = 0;
                                 break;
                             }
 
                             let descBytesNew = sizu32(config.memory.initial) + sizu32(config.memory.maximum);
-                            console.log('DESC_BYTES=', descBytes, 'NEW=', descBytesNew);
+                            _log('desc_bytes=', descBytes, 'new_desc_bytes=', descBytesNew);
                             if (descBytesNew != descBytes)
                             {
                                 secLen = secLen - descBytes + descBytesNew;
                                 let secLenBytesNew = sizu32(secLen);
 
-                                console.log('SEC_BYTES=', secLenBytes, 'NEW=', secLenBytesNew);
+                                _log('sec_bytes=', secLenBytes, 'new_sec_bytes=', secLenBytesNew);
                                 if (secLenBytesNew != secLenBytes) {
-                                    console.log('BIG PATCH-2');
+                                    _log('patch-2 required');
                                 }
                                 else {
-                                    console.log('BIG PATCH-1');
+                                    _log('patch-1 required');
                                 }
                             }
                             else {

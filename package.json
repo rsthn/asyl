@@ -10,13 +10,10 @@
     "types": "./dist/asyl.d.ts",
     "scripts": {
         "test": "echo Ok",
-        "deploy": "pnpm build && pnpm tsdoc && node ./scripts/deploy.js",
-        "commit": "node ./scripts/commit.js",
         "tsdoc": "dts-bundle-generator --no-banner --disable-symlinks-following -o ./dist/asyl.d.ts ./src/main.ts",
-        "changes": "rose ./scripts/changes.fn",
+        "changes": "rose :changes",
         "build:global": "parcel build --no-cache --target global",
         "build:module": "parcel build --no-cache --target module",
-        "watch": "parcel watch --no-cache --target module --no-hmr",
         "wasm": "/dev/opt/wasi-sdk/bin/clang++ -I/dev/usr-include -nostartfiles -flto -Wl,--lto-O3 -Wl,--shared-memory -Wl,--import-memory -Wl,--initial-memory=1048576 -Wl,--max-memory=2147483648 -Wl,--export-all -Wl,--allow-undefined -Wl,--export-dynamic -Wl,--no-check-features -Wl,--no-entry src/main.cpp -o src/main.wasm -Wl,-Map,src/main.map",
         "wat": "wasm2wat --enable-threads --generate-names src/main.wasm > src/main.wat",
         "build": "pnpm build:module && pnpm build:global",
@@ -53,10 +50,11 @@
         "buffer": "^6.0.3"
     },
     "devDependencies": {
-        "@parcel/optimizer-data-url": "^2.16.3",
-        "@parcel/transformer-inline-string": "^2.16.3",
+        "@parcel/optimizer-data-url": "^2.16.4",
+        "@parcel/transformer-inline-string": "^2.16.4",
         "dts-bundle-generator": "^8.1.2",
-        "parcel": "^2.16.3",
+        "parcel": "^2.16.4",
         "typescript": "^5.9.3"
-    }
+    },
+    "packageManager": "pnpm@11.13.0+sha512.88d94724d8f2e6c186744a5584c6e59ecac869ec7ba15e9cb4cd628e8dc7066820b2481d8ee3b51ea8da323a7378068aa58c556a3720d32b7c20a051d088363a"
 }
