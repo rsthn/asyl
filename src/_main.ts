@@ -7,6 +7,7 @@ from './loader';
 
 globalThis.asyl =
 {
+    loadAsyl,
     loadFromBytes,
     loadFromDataUri,
     loadFromUrl,
@@ -16,4 +17,3 @@ globalThis.asyl =
     asyl,
 };
 
-loadAsyl();

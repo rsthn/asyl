@@ -1,4 +1,4 @@
-# v1.0.5 - Jul 15 2026
+# v1.0.6 - Jul 15 2026
 
 #### QoL
 - Updated dependencies and improved log messages.

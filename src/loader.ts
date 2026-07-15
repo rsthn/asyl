@@ -52,7 +52,7 @@ export async function loadAsyl()
 
     asyl.init(instance);
     asyl.core = {
-        version: 100
+        version: '1.0.6'
     };
 
     // Copy the core exports, which are prefixed with an underscore.
@@ -131,6 +131,9 @@ function sizu32 (value)
  */
 export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.ModuleImports) : Promise<Module>
 {
+    if (asyl.instance === null)
+        await loadAsyl();
+
     if (bytes[0] != 0x00 && bytes[1] != 0x61 && bytes[2] != 0x73 && bytes[3] != 0x6D)
         throw new Error('Provided buffer is not a WASM module.');
 

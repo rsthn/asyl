@@ -46,6 +46,10 @@ export declare let dataView: DataView;
  */
 export declare let asyl: Module;
 /**
+ * Loads the main module and prepares global shared memory.
+ */
+export declare function loadAsyl(): Promise<void>;
+/**
  * Loads a WebAssembly module from a Uint8Array and returns an Asyl module.
  * @param {Uint8Array} bytes Array buffer containing a WebAssembly binary.
  * @param {Module} env Module imports to pass to the WebAssembly instantiate method.
