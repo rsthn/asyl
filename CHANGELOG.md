@@ -1,3 +1,10 @@
+# v1.0.4 - Jul 15 2026
+
+#### QoL
+- Updated dependencies and improved log messages.
+
+<br/>
+
 # v1.0.3 - Jun 25 2023
 
 #### Asyl
