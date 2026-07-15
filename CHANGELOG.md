@@ -1,7 +1,8 @@
-# v1.0.4 - Jul 15 2026
+# v1.0.5 - Jul 15 2026
 
 #### QoL
 - Updated dependencies and improved log messages.
+- Updated exports and order of construction of globals objects: memory, dataview and asyl.
 
 <br/>
 

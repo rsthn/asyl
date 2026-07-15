@@ -6,64 +6,51 @@ import atob from 'atob';
 //@ts-ignore
 import main_wasm from 'data-url:./main.wasm';
 
+const MEM_INITIAL = 16; // 16 pages = 1 MB
+const MEM_MAXIMUM = 32768; // 32768 pages = 2 GB
+
 /**
- * Configuration object for the module loader.
+ * Logs a message to the console.
  */
-export const config =
-{
-    /**
-     * Initial size of the WebAssembly shared memory.
-     */
-    memory: {
-        initial: 16, // 16 pages = 1 MB
-        maximum: 32768, // 32768 pages = 2 GB
-        shared: true
-    }
-};
+export function log (...args) {
+    console.log('[asyl]', ...args);
+}
 
 /**
  * Shared memory object.
  */
-export let memory: WebAssembly.Memory = null;
+export let memory: WebAssembly.Memory = new WebAssembly.Memory ({
+    initial: MEM_INITIAL,
+    maximum: MEM_MAXIMUM,
+    shared: true
+});
 
 /**
  * Shared memory data view.
  */
-export let dataView: DataView = null;
+export let dataView: DataView = new DataView(memory.buffer);
 
 /**
  * Main asyl module. Exposes several utility functions.
  */
-export let asyl: Module = null;
-
-function _log (...args) {
-    console.log('[asyl] ', ...args);
-}
+export let asyl: Module = new Module();
 
 /**
  * Loads the main module and prepares global shared memory.
  */
-export async function loadAsyl ()
+export async function loadAsyl()
 {
-    if (asyl !== null)
+    if (asyl.instance !== null)
         return;
 
     const wasmBuff = loadDataUri(main_wasm);
-
-    memory = new WebAssembly.Memory ({
-        initial: config.memory.initial,
-        maximum: config.memory.maximum,
-        shared: true
-    });
-
-    dataView = new DataView (memory.buffer);
 
     const { instance } = await WebAssembly.instantiate(wasmBuff.buffer, {
         env: { memory },
         wasi_snapshot_preview1: wasi
     });
 
-    asyl = new Module(instance);
+    asyl.init(instance);
     asyl.core = {
         version: 100
     };
@@ -79,6 +66,8 @@ export async function loadAsyl ()
 
         asyl.core[name.substring(1)] = value;
     }
+
+    log('loaded core', asyl.core.version);
 }
 
 function ldu32 (bytes, index)
@@ -142,8 +131,6 @@ function sizu32 (value)
  */
 export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.ModuleImports) : Promise<Module>
 {
-    if (asyl === null) await loadAsyl();
-
     if (bytes[0] != 0x00 && bytes[1] != 0x61 && bytes[2] != 0x73 && bytes[3] != 0x6D)
         throw new Error('Provided buffer is not a WASM module.');
 
@@ -185,14 +172,14 @@ export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.Module
                     {
                         case 0x00: // min: n, max: ε
                             [_, i] = ldu32(bytes, i);
-                            _log('memory min=', _);
+                            log('memory min=', _);
                             break;
 
                         case 0x01: // min: n, max: m
                             [_, i] = ldu32(bytes, i);
-                            _log('memory min=', _);
+                            log('memory min=', _);
                             [_, i] = ldu32(bytes, i);
-                            _log('memory max=', _);
+                            log('memory max=', _);
                             break;
 
                         case 0x03: // min: n, max: m (shared)
@@ -201,31 +188,31 @@ export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.Module
                             [maxMem, i] = ldu32(bytes, i);
                             descBytes = i - descOffs;
 
-                            _log(`shared memory limits: min=${minMem}, max=${maxMem}`);
-                            if (minMem == config.memory.initial && maxMem == config.memory.maximum) {
-                                _log('shared memory limits match, no patching required');
+                            log(`shared memory limits: min=${minMem}, max=${maxMem}`);
+                            if (minMem == MEM_INITIAL && maxMem == MEM_MAXIMUM) {
+                                log('shared memory limits match, no patching required');
                                 value = 0;
                                 break;
                             }
 
-                            let descBytesNew = sizu32(config.memory.initial) + sizu32(config.memory.maximum);
-                            _log('desc_bytes=', descBytes, 'new_desc_bytes=', descBytesNew);
+                            let descBytesNew = sizu32(MEM_INITIAL) + sizu32(MEM_MAXIMUM);
+                            log('desc_bytes=', descBytes, 'new_desc_bytes=', descBytesNew);
                             if (descBytesNew != descBytes)
                             {
                                 secLen = secLen - descBytes + descBytesNew;
                                 let secLenBytesNew = sizu32(secLen);
 
-                                _log('sec_bytes=', secLenBytes, 'new_sec_bytes=', secLenBytesNew);
+                                log('sec_bytes=', secLenBytes, 'new_sec_bytes=', secLenBytesNew);
                                 if (secLenBytesNew != secLenBytes) {
-                                    _log('patch-2 required');
+                                    log('patch-2 required');
                                 }
                                 else {
-                                    _log('patch-1 required');
+                                    log('patch-1 required');
                                 }
                             }
                             else {
-                                descOffs = stu32(bytes, descOffs, config.memory.initial);
-                                descOffs = stu32(bytes, descOffs, config.memory.maximum);
+                                descOffs = stu32(bytes, descOffs, MEM_INITIAL);
+                                descOffs = stu32(bytes, descOffs, MEM_MAXIMUM);
                             }
 
                             value = 0;
@@ -250,7 +237,7 @@ export async function loadFromBytes (bytes: Uint8Array, env?: WebAssembly.Module
         wasi_snapshot_preview1: wasi
     });
 
-    return new Module(instance);
+    return (new Module()).init(instance);
 }
 
 /**

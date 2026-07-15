@@ -3,7 +3,8 @@ export declare class Module {
 	instance: WebAssembly.Instance;
 	memory: WebAssembly.Memory;
 	dv: DataView;
-	constructor(instance: WebAssembly.Instance);
+	constructor();
+	init(instance: WebAssembly.Instance): Module;
 	/**
 	 * Allocates a block of memory in the WebAssembly module memory space.
 	 * @param bytes Number of bytes to allocate.
@@ -33,19 +34,6 @@ export declare class Module {
 	mapUint8Array(offset: number, count: number): Uint8Array;
 }
 /**
- * Configuration object for the module loader.
- */
-export declare const config: {
-	/**
-	 * Initial size of the WebAssembly shared memory.
-	 */
-	memory: {
-		initial: number;
-		maximum: number;
-		shared: boolean;
-	};
-};
-/**
  * Shared memory object.
  */
 export declare let memory: WebAssembly.Memory;
@@ -57,10 +45,6 @@ export declare let dataView: DataView;
  * Main asyl module. Exposes several utility functions.
  */
 export declare let asyl: Module;
-/**
- * Loads the main module and prepares global shared memory.
- */
-export declare function loadAsyl(): Promise<void>;
 /**
  * Loads a WebAssembly module from a Uint8Array and returns an Asyl module.
  * @param {Uint8Array} bytes Array buffer containing a WebAssembly binary.
